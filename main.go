@@ -289,7 +289,7 @@ func (frame *DataFrame) ColumnVal(fieldName string, headers map[string]int) []st
 	return fieldVals
 }
 
-// Sort the dataframe by column name
+// Sort the dataframe based on column name
 func (frame *DataFrame) Sort(columnName string) {
 	if frame == nil {
 		return
