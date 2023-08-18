@@ -312,7 +312,6 @@ func (frame DataFrame) KeepColumns(columns []string) DataFrame {
 		}
 		df = df.AddRecord(newData)
 	}
-
 	return df
 }
 
