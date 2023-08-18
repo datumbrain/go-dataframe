@@ -301,6 +301,28 @@ func (frame *DataFrame) Sort(columnName string) {
 	})
 }
 
+// Sort the dataframe based on column names
+func (frame *DataFrame) SortByColumns(columns ...string) {
+	if frame == nil {
+		return
+	}
+
+	columnCount := len(columns)
+	sort.Slice(frame.FrameRecords, func(i, j int) bool {
+		record1 := frame.FrameRecords[i]
+		record2 := frame.FrameRecords[j]
+
+		for k := 0; k < columnCount; k++ {
+			if record1.Val(columns[k], frame.Headers) != record2.Val(columns[k], frame.Headers) {
+				return record1.Val(columns[k], frame.Headers) <
+					record2.Val(columns[k], frame.Headers)
+			}
+		}
+
+		return true
+	})
+}
+
 // User specifies columns they want to keep from a preexisting DataFrame
 func (frame DataFrame) KeepColumns(columns []string) DataFrame {
 	df := CreateNewDataFrame(columns)
