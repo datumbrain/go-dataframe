@@ -289,11 +289,8 @@ func (frame *DataFrame) ColumnVal(fieldName string, headers map[string]int) []st
 	return fieldVals
 }
 
-// Sort the dataframe based on column name
+// Sort the dataframe by column name
 func (frame *DataFrame) Sort(columnName string) {
-	if frame == nil {
-		return
-	}
 
 	sort.Slice(frame.FrameRecords, func(i, j int) bool {
 		return frame.FrameRecords[i].Val(columnName, frame.Headers) <
@@ -301,11 +298,8 @@ func (frame *DataFrame) Sort(columnName string) {
 	})
 }
 
-// Sort the dataframe by column names
-func (frame *DataFrame) SortByColumns(columns ...string) {
-	if frame == nil {
-		return
-	}
+// Sort the dataframe by columns
+func (frame *DataFrame) SortByColumns(columns []string, sortOrderAscending bool) {
 
 	columnCount := len(columns)
 	sort.Slice(frame.FrameRecords, func(i, j int) bool {
@@ -313,9 +307,15 @@ func (frame *DataFrame) SortByColumns(columns ...string) {
 		record2 := frame.FrameRecords[j]
 
 		for k := 0; k < columnCount; k++ {
-			if record1.Val(columns[k], frame.Headers) != record2.Val(columns[k], frame.Headers) {
-				return record1.Val(columns[k], frame.Headers) <
-					record2.Val(columns[k], frame.Headers)
+			val1 := record1.Val(columns[k], frame.Headers)
+			val2 := record2.Val(columns[k], frame.Headers)
+
+			if val1 != val2 {
+				if sortOrderAscending {
+					return val1 < val2
+				} else {
+					return val1 > val2
+				}
 			}
 		}
 
@@ -334,6 +334,7 @@ func (frame DataFrame) KeepColumns(columns []string) DataFrame {
 		}
 		df = df.AddRecord(newData)
 	}
+
 	return df
 }
 
@@ -1053,7 +1054,7 @@ func (x Record) ConvertToFloat(fieldName string, headers map[string]int) float64
 	return value
 }
 
-// Converts the value from string to int64.
+// Converts the value from a string to int64.
 func (x Record) ConvertToInt(fieldName string, headers map[string]int) int64 {
 	value, err := strconv.ParseInt(x.Val(fieldName, headers), 0, 64)
 	if err != nil {
