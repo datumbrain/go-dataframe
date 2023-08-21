@@ -301,7 +301,7 @@ func (frame *DataFrame) Sort(columnName string) {
 	})
 }
 
-// Sort the dataframe based on column names
+// Sort the dataframe by column names
 func (frame *DataFrame) SortByColumns(columns ...string) {
 	if frame == nil {
 		return
